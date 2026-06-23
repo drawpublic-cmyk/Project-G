@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>관리데이 앱 디자인 MVP</title>
+  <style>
+    :root {
+      --ink: #151917;
+      --muted: #728079;
+      --subtle: #9aa7a1;
+      --line: #e3ebe6;
+      --paper: #ffffff;
+      --base: #f5f8f6;
+      --brand: #0a8a6a;
+      --brand-deep: #056247;
+      --mint: #e5f7ef;
+      --mint-2: #f0fbf6;
+      --blue: #e9f3ff;
+      --yellow: #fff6dc;
+      --danger: #b44a4a;
+      --shadow: 0 18px 50px rgba(31, 63, 50, .12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #dde8e2;
+      color: var(--ink);
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .phone {
+      width: min(100%, 430px);
+      height: min(920px, calc(100vh - 48px));
+      min-height: 760px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      border: 1px solid rgba(21, 25, 23, .08);
+      border-radius: 30px;
+      background: var(--base);
+      box-shadow: var(--shadow);
+    }
+
+    .statusbar {
+      height: 30px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      padding: 0 22px 6px;
+      background: var(--paper);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .top {
+      padding: 14px 18px 18px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--brand);
+      color: white;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfdfc;
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 154px;
+      padding: 18px;
+      border-radius: 22px;
+      background:
+        linear-gradient(135deg, rgba(10, 138, 106, .96), rgba(5, 98, 71, .96)),
+        var(--brand);
+      color: white;
+    }
+
+    .hero-card h1 {
+      position: relative;
+      max-width: 260px;
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.18;
+      letter-spacing: 0;
+      z-index: 1;
+    }
+
+    .hero-card p {
+      position: relative;
+      max-width: 270px;
+      margin: 10px 0 0;
+      color: rgba(255, 255, 255, .82);
+      font-size: 13px;
+      line-height: 1.5;
+      z-index: 1;
+    }
+
+    .hero-chip {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      display: grid;
+      gap: 7px;
+      width: 104px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .18);
+      border: 1px solid rgba(255, 255, 255, .24);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-chip strong {
+      font-size: 20px;
+    }
+
+    .hero-chip span {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .78);
+      line-height: 1.35;
+    }
+
+    .content {
+      overflow: auto;
+      padding: 14px 16px 108px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin: 18px 2px 10px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      overflow: hidden;
+    }
+
+    .pad {
+      padding: 15px;
+    }
+
+    .quick-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    select, input {
+      width: 100%;
+      height: 43px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fbfdfc;
+      padding: 0 11px;
+      color: var(--ink);
+      outline: none;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(10, 138, 106, .12);
+    }
+
+    .service-rail {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 106px;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 2px 1px 4px;
+      scrollbar-width: none;
+    }
+
+    .service-rail::-webkit-scrollbar {
+      display: none;
+    }
+
+    .service-card {
+      min-height: 104px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--paper);
+      padding: 12px;
+      text-align: left;
+    }
+
+    .service-card[aria-pressed="true"] {
+      border-color: rgba(10, 138, 106, .36);
+      background: var(--mint-2);
+      box-shadow: inset 0 0 0 1px rgba(10, 138, 106, .12);
+    }
+
+    .service-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 11px;
+      border-radius: 12px;
+      background: var(--mint);
+      color: var(--brand-deep);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .service-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .service-card span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .mode-toggle {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 12px;
+      padding: 5px;
+      border-radius: 15px;
+      background: #edf3ef;
+    }
+
+    .mode-toggle button {
+      height: 35px;
+      border: 0;
+      border-radius: 11px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .mode-toggle button.active {
+      color: var(--brand-deep);
+      background: var(--paper);
+      box-shadow: 0 5px 14px rgba(31, 63, 50, .08);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 12px 10px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--paper);
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 4px;
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 15px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .plan-card {
+      border: 1px solid rgba(10, 138, 106, .22);
+      box-shadow: 0 10px 30px rgba(31, 63, 50, .08);
+    }
+
+    .plan-head {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .plan-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .plan-head h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .plan-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .badge {
+      flex: 0 0 auto;
+      padding: 7px 9px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--brand-deep);
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 999px;
+      background: #edf3ef;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      width: 34%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--brand);
+    }
+
+    .timeline {
+      padding: 4px 16px 8px;
+    }
+
+    .slot {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 11px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .slot:last-child {
+      border-bottom: 0;
+    }
+
+    .time {
+      padding-top: 2px;
+      color: var(--brand-deep);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .slot-main h3 {
+      margin: 0 0 5px;
+      font-size: 15px;
+    }
+
+    .slot-main p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .slot-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mini-btn {
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fbfdfc;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .mini-btn.primary-mini {
+      border-color: rgba(10, 138, 106, .24);
+      background: var(--mint);
+      color: var(--brand-deep);
+    }
+
+    .mini-btn.danger-mini {
+      color: var(--danger);
+    }
+
+    .move {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 8px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #edf4f0;
+      color: var(--brand-deep);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .notice {
+      background: var(--yellow);
+      border-color: #eedb9d;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .notice p {
+      margin: 0;
+      color: #75664b;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .bottom-bar {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 10px;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, .96);
+    }
+
+    .primary, .secondary {
+      height: 50px;
+      border-radius: 15px;
+      font-weight: 900;
+    }
+
+    .primary {
+      border: 0;
+      background: var(--brand);
+      color: white;
+    }
+
+    .secondary {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+    }
+
+    dialog {
+      width: min(390px, calc(100vw - 28px));
+      margin: auto auto 0;
+      padding: 0;
+      border: 0;
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 -18px 60px rgba(0, 0, 0, .22);
+    }
+
+    dialog::backdrop {
+      background: rgba(11, 20, 17, .44);
+    }
+
+    .sheet {
+      padding: 12px 18px 18px;
+    }
+
+    .handle {
+      width: 44px;
+      height: 4px;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      background: #d3ddd8;
+    }
+
+    .sheet h2 {
+      margin: 0 0 8px;
+      font-size: 21px;
+    }
+
+    .sheet p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sheet-list {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .sheet-item {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fbfdfc;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .sheet-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    @media (max-width: 520px) {
+      .stage {
+        display: block;
+        padding: 0;
+      }
+
+      .phone {
+        width: 100%;
+        height: 100vh;
+        min-height: 100vh;
+        border: 0;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="phone">
+      <header>
+        <div class="statusbar">
+          <span>9:41</span>
+          <span>5G 100%</span>
+        </div>
+        <div class="top">
+          <div class="nav">
+            <div class="brand">
+              <div class="mark">관</div>
+              <span>관리데이</span>
+            </div>
+            <div class="nav-actions">
+              <button class="icon-btn" type="button" aria-label="검색">⌕</button>
+              <button class="icon-btn" type="button" aria-label="내 정보">내</button>
+            </div>
+          </div>
+
+          <section class="hero-card">
+            <h1>네이버예약을<br>하루 코스로 정리</h1>
+            <p>가능한 시간만 고르면 예약 순서와 대체 플랜까지 같이 계산해요.</p>
+            <div class="hero-chip">
+              <strong id="heroCount">3개</strong>
+              <span>오늘 예약할 관리</span>
+            </div>
+          </section>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="section-title">
+          <h2>조건 선택</h2>
+          <span>수정하면 코스 자동 재계산</span>
+        </section>
+
+        <section class="card pad">
+          <div class="quick-form">
+            <div class="field">
+              <label for="area">지역</label>
+              <select id="area">
+                <option>강남역</option>
+                <option>성수</option>
+                <option>홍대입구</option>
+                <option>잠실</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="date">날짜</label>
+              <input id="date" type="date">
+            </div>
+            <div class="field">
+              <label for="start">시작 시간</label>
+              <select id="start">
+                <option>10:00</option>
+                <option>11:00</option>
+                <option selected>13:00</option>
+                <option>14:00</option>
+                <option>15:00</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="budget">예산</label>
+              <select id="budget">
+                <option value="150000">15만원 이하</option>
+                <option value="220000" selected>22만원 이하</option>
+                <option value="320000">32만원 이하</option>
+                <option value="450000">45만원 이하</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-title">
+          <h2>받고 싶은 관리</h2>
+          <span>복수 선택</span>
+        </section>
+
+        <section>
+          <div class="service-rail" id="serviceChips">
+            <button class="service-card" aria-pressed="true" data-service="네일" type="button">
+              <span class="service-icon">N</span><strong>네일</strong><span>90분</span>
+            </button>
+            <button class="service-card" aria-pressed="true" data-service="속눈썹펌" type="button">
+              <span class="service-icon">L</span><strong>속눈썹펌</strong><span>55분</span>
+            </button>
+            <button class="service-card" aria-pressed="true" data-service="피부관리" type="button">
+              <span class="service-icon">S</span><strong>피부관리</strong><span>80분</span>
+            </button>
+            <button class="service-card" aria-pressed="false" data-service="눈썹문신" type="button">
+              <span class="service-icon">B</span><strong>눈썹문신</strong><span>120분</span>
+            </button>
+            <button class="service-card" aria-pressed="false" data-service="왁싱" type="button">
+              <span class="service-icon">W</span><strong>왁싱</strong><span>45분</span>
+            </button>
+            <button class="service-card" aria-pressed="false" data-service="헤어" type="button">
+              <span class="service-icon">H</span><strong>헤어</strong><span>110분</span>
+            </button>
+          </div>
+          <div class="mode-toggle" aria-label="추천 모드">
+            <button class="active" data-mode="best" type="button">성공확률</button>
+            <button data-mode="near" type="button">동선짧게</button>
+            <button data-mode="price" type="button">가격낮게</button>
+          </div>
+        </section>
+
+        <section class="summary" id="summary" aria-label="코스 요약"></section>
+
+        <section class="section-title">
+          <h2>추천 예약 순서</h2>
+          <span id="planBadge">네이버예약 연결형</span>
+        </section>
+
+        <article class="card plan-card">
+          <div class="plan-head">
+            <div class="plan-topline">
+              <div>
+                <h2 id="planTitle">강남역 4시간 코스</h2>
+                <p id="planSubtitle">각 샵의 네이버예약에서 직접 확정하고, 막히면 앱이 다시 조합합니다.</p>
+              </div>
+              <span class="badge">1/3 완료</span>
+            </div>
+            <div class="progress" aria-label="예약 진행률"><span id="progressBar"></span></div>
+          </div>
+          <div class="timeline" id="timeline"></div>
+        </article>
+
+        <section class="card pad notice">
+          <strong>예약이 불가능하면?</strong>
+          <p>네이버예약에서 시간이 마감된 경우, 해당 카드의 “예약 불가”를 누르면 같은 샵 다른 시간, 근처 다른 샵, 순서 변경안을 다시 제안합니다.</p>
+        </section>
+      </main>
+
+      <footer class="bottom-bar">
+        <button class="secondary" id="copyPlan" type="button">일정 복사</button>
+        <button class="primary" id="openGuide" type="button">네이버예약 시작</button>
+      </footer>
+    </div>
+  </div>
+
+  <dialog id="bookingDialog">
+    <div class="sheet">
+      <div class="handle"></div>
+      <h2>네이버예약 순서대로 확정하기</h2>
+      <p>앱이 예약을 대신하지 않고, 사용자가 네이버예약에서 직접 확정합니다. 예약이 막히면 앱으로 돌아와 대체 코스를 받으면 됩니다.</p>
+      <div class="sheet-list" id="sheetList"></div>
+      <div class="sheet-actions">
+        <button class="secondary" id="closeDialog" type="button">닫기</button>
+        <button class="primary" id="confirmRequest" type="button">1번 예약 열기</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    const services = {
+      "네일": { minutes: 90, price: 65000, shop: "오브네일 강남", note: "젤 원컬러/아트 옵션", link: "https://m.booking.naver.com/" },
+      "속눈썹펌": { minutes: 55, price: 45000, shop: "라움래쉬", note: "노글루 펌, 당일 가능 슬롯 우선", link: "https://m.booking.naver.com/" },
+      "피부관리": { minutes: 80, price: 78000, shop: "결스킨케어", note: "수분/진정 관리, 마지막 일정 추천", link: "https://m.booking.naver.com/" },
+      "눈썹문신": { minutes: 120, price: 150000, shop: "브로우스튜디오 선", note: "상담 포함, 당일 음주/운동 안내 필요", link: "https://m.booking.naver.com/" },
+      "왁싱": { minutes: 45, price: 55000, shop: "클린왁싱", note: "여성 전용 옵션 표시", link: "https://m.booking.naver.com/" },
+      "헤어": { minutes: 110, price: 90000, shop: "톤헤어", note: "컷/드라이 중심, 염색은 별도 코스", link: "https://m.booking.naver.com/" }
+    };
+
+    const areaOffsets = {
+      "강남역": ["도보 6분", "택시 7분", "도보 9분"],
+      "성수": ["도보 8분", "도보 5분", "택시 6분"],
+      "홍대입구": ["도보 7분", "택시 8분", "도보 10분"],
+      "잠실": ["택시 6분", "도보 9분", "택시 9분"]
+    };
+
+    let currentMode = "best";
+    let currentRows = [];
+
+    const dateInput = document.querySelector("#date");
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.value = tomorrow.toISOString().slice(0, 10);
+
+    function money(value) {
+      return new Intl.NumberFormat("ko-KR").format(value) + "원";
+    }
+
+    function addMinutes(time, minutes) {
+      const [hour, minute] = time.split(":").map(Number);
+      const date = new Date(2026, 0, 1, hour, minute + minutes);
+      return String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0");
+    }
+
+    function selectedServices() {
+      return [...document.querySelectorAll(".service-card[aria-pressed='true']")].map(card => card.dataset.service);
+    }
+
+    function orderedServices(list) {
+      if (currentMode === "price") {
+        return [...list].sort((a, b) => services[a].price - services[b].price);
+      }
+      if (currentMode === "near") {
+        return [...list].sort((a, b) => services[a].minutes - services[b].minutes);
+      }
+      const preferred = ["네일", "속눈썹펌", "피부관리", "왁싱", "헤어", "눈썹문신"];
+      return [...list].sort((a, b) => preferred.indexOf(a) - preferred.indexOf(b));
+    }
+
+    function buildPlan() {
+      const area = document.querySelector("#area").value;
+      const start = document.querySelector("#start").value;
+      const budget = Number(document.querySelector("#budget").value);
+      const chosen = orderedServices(selectedServices());
+      const timeline = document.querySelector("#timeline");
+
+      if (!chosen.length) {
+        document.querySelector("#summary").innerHTML = "";
+        document.querySelector("#heroCount").textContent = "0개";
+        timeline.innerHTML = `<div class="slot"><div></div><div class="slot-main"><h3>관리 항목을 골라주세요</h3><p>최소 1개 이상 선택하면 코스를 만들 수 있어요.</p></div></div>`;
+        return;
+      }
+
+      let cursor = start;
+      let totalMinutes = 0;
+      let totalPrice = 0;
+      let moveMinutes = 0;
+      const moves = areaOffsets[area];
+
+      currentRows = chosen.map((name, index) => {
+        const item = services[name];
+        const begin = cursor;
+        const end = addMinutes(begin, item.minutes);
+        const move = index < chosen.length - 1 ? moves[index % moves.length] : "관리데이 종료";
+        const gap = 15;
+        cursor = index < chosen.length - 1 ? addMinutes(end, gap) : end;
+        totalMinutes += item.minutes;
+        totalPrice += item.price;
+        moveMinutes += index < chosen.length - 1 ? gap : 0;
+        return { name, item, begin, end, move };
+      });
+
+      const total = totalMinutes + moveMinutes;
+      document.querySelector("#heroCount").textContent = `${chosen.length}개`;
+      document.querySelector("#planTitle").textContent = `${area} ${Math.round(total / 60 * 10) / 10}시간 코스`;
+      document.querySelector("#planSubtitle").textContent = `${start}부터 ${chosen.join(", ")} 순서로 네이버예약을 진행해요.`;
+      document.querySelector("#progressBar").style.width = `${Math.max(18, Math.round(100 / chosen.length))}%`;
+
+      document.querySelector("#summary").innerHTML = `
+        <div class="metric"><strong>${Math.floor(total / 60)}h ${total % 60}m</strong><span>예상 소요</span></div>
+        <div class="metric"><strong>${money(totalPrice)}</strong><span>예상 금액</span></div>
+        <div class="metric"><strong>${totalPrice <= budget ? "예산 안" : "초과"}</strong><span>${money(budget)}</span></div>
+      `;
+
+      timeline.innerHTML = currentRows.map((row, index) => `
+        <div class="slot">
+          <div class="time">${row.begin}</div>
+          <div class="slot-main">
+            <h3>${index + 1}. ${row.name} · ${row.item.shop}</h3>
+            <p>${row.begin}-${row.end} · ${row.item.minutes}분 · ${money(row.item.price)}</p>
+            <p>${row.item.note}</p>
+            <span class="move">${index < currentRows.length - 1 ? "다음 샵까지 " + row.move : row.move}</span>
+            <div class="slot-actions">
+              <button class="mini-btn primary-mini" type="button" data-open="${index}">네이버예약 열기</button>
+              <button class="mini-btn danger-mini" type="button" data-fail="${index}">예약 불가</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelector("#sheetList").innerHTML = currentRows.map((row, index) => `
+        <div class="sheet-item">${index + 1}. ${row.begin} ${row.name} · ${row.item.shop}</div>
+      `).join("");
+    }
+
+    document.querySelector("#serviceChips").addEventListener("click", (event) => {
+      const card = event.target.closest(".service-card");
+      if (!card) return;
+      card.setAttribute("aria-pressed", card.getAttribute("aria-pressed") !== "true");
+      buildPlan();
+    });
+
+    document.querySelector(".mode-toggle").addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      document.querySelectorAll(".mode-toggle button").forEach(item => item.classList.remove("active"));
+      button.classList.add("active");
+      currentMode = button.dataset.mode;
+      buildPlan();
+    });
+
+    document.querySelectorAll("select, input[type='date']").forEach(input => {
+      input.addEventListener("change", buildPlan);
+    });
+
+    document.querySelector("#timeline").addEventListener("click", (event) => {
+      const openButton = event.target.closest("[data-open]");
+      const failButton = event.target.closest("[data-fail]");
+      if (openButton) {
+        window.open(currentRows[Number(openButton.dataset.open)].item.link, "_blank");
+      }
+      if (failButton) {
+        const row = currentRows[Number(failButton.dataset.fail)];
+        document.querySelector("#bookingDialog h2").textContent = `${row.name} 예약 불가`;
+        document.querySelector("#bookingDialog p").textContent = "마감된 시간 대신 같은 샵 다른 시간, 근처 다른 샵, 순서 변경안을 다시 계산합니다.";
+        document.querySelector("#sheetList").innerHTML = `
+          <div class="sheet-item">같은 샵 ${addMinutes(row.begin, 50)} 시간으로 변경</div>
+          <div class="sheet-item">근처 대체 샵으로 같은 시간대 예약</div>
+          <div class="sheet-item">${row.name}을 코스 마지막으로 이동</div>
+        `;
+        document.querySelector("#confirmRequest").textContent = "대체 코스 적용";
+        document.querySelector("#bookingDialog").showModal();
+      }
+    });
+
+    document.querySelector("#openGuide").addEventListener("click", () => {
+      document.querySelector("#bookingDialog h2").textContent = "네이버예약 순서대로 확정하기";
+      document.querySelector("#bookingDialog p").textContent = "앱이 예약을 대신하지 않고, 사용자가 네이버예약에서 직접 확정합니다. 예약이 막히면 앱으로 돌아와 대체 코스를 받으면 됩니다.";
+      document.querySelector("#confirmRequest").textContent = "1번 예약 열기";
+      document.querySelector("#sheetList").innerHTML = currentRows.map((row, index) => `
+        <div class="sheet-item">${index + 1}. ${row.begin} ${row.name} · ${row.item.shop}</div>
+      `).join("");
+      document.querySelector("#bookingDialog").showModal();
+    });
+
+    document.querySelector("#closeDialog").addEventListener("click", () => {
+      document.querySelector("#bookingDialog").close();
+    });
+
+    document.querySelector("#confirmRequest").addEventListener("click", () => {
+      if (currentRows[0]) {
+        window.open(currentRows[0].item.link, "_blank");
+      }
+    });
+
+    document.querySelector("#copyPlan").addEventListener("click", async () => {
+      const title = document.querySelector("#planTitle").textContent;
+      const rows = currentRows.map((row, index) => `${index + 1}. ${row.begin} ${row.name} - ${row.item.shop}`).join("\n");
+      try {
+        await navigator.clipboard.writeText(title + "\n" + rows);
+        document.querySelector("#copyPlan").textContent = "복사됨";
+      } catch (error) {
+        document.querySelector("#copyPlan").textContent = "복사 권한 필요";
+      }
+      setTimeout(() => document.querySelector("#copyPlan").textContent = "일정 복사", 1400);
+    });
+
+    buildPlan();
+  </script>
+</body>
+</html>

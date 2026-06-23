@@ -4,7 +4,8 @@
 
 ## 산출물
 
-- `Project G _ 관리데이/manage-day-mvp.html`: 모바일 앱형 HTML 프로토타입
+- `Project G _ 관리데이/index.html`: 모바일 앱형 HTML 프로토타입
+- `Project G _ 관리데이/manage-day-mvp.html`: 동일한 HTML 프로토타입 원본 파일
 - `outputs/manage-day-product-plan.md`: 관리데이 MVP 기획안
 
 ## 핵심 방향
